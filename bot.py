@@ -12,13 +12,13 @@ from aiogram.types import Message
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 
-# Загружаем переменные окружения из .env
+# Загружаем переменные окружения из файла .env
 load_dotenv()
 
-# Получаем токен
+# Получаем токен – обязательно должен называться TELEGRAM_BOT_TOKEN в .env
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 if not TELEGRAM_TOKEN:
-    raise ValueError("❌ TELEGRAM_TOKEN не найден! Проверьте файл .env")
+    raise ValueError("❌ TELEGRAM_BOT_TOKEN не найден! Проверьте файл .env")
 
 # Инициализация бота и диспетчера
 bot = Bot(token=TELEGRAM_TOKEN)
@@ -32,6 +32,7 @@ async def cmd_start(message: Message):
     await message.answer(
         f"👋 Привет, {user_name}!\n"
         "Я бот стоматологии «Улыбка+» (г. Острогожск).\n"
+        "Наш девиз: «Лечим с заботой, дарим улыбки!» 😊\n"
         "Доступные команды: /help"
     )
 
@@ -52,7 +53,8 @@ async def cmd_info(message: Message):
         "🦷 Стоматология «Улыбка+»\n"
         "📍 Адрес: г. Острогожск, ул. Ленина, 41\n"
         "📞 Телефон для справок и записи: +7 (47375) 4-64-61\n"
-        "🕒 Часы работы: уточняйте по телефону"
+        "🕒 Часы работы: уточняйте по телефону\n\n"
+        "✨ Наш девиз: «Лечим с заботой, дарим улыбки!»"
     )
 
 @dp.message()
