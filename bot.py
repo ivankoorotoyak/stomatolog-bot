@@ -1,32 +1,73 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import asyncio
 import logging
+import os
+from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
-from config import TELEGRAM_TOKEN
-from cloud_model import ask_cloud_model
+from aiogram.types import Message
 
+# Настройка логирования
 logging.basicConfig(level=logging.INFO)
 
+# Загружаем переменные окружения из .env
+load_dotenv()
+
+# Получаем токен
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
+if not TELEGRAM_TOKEN:
+    raise ValueError("❌ TELEGRAM_TOKEN не найден! Проверьте файл .env")
+
+# Инициализация бота и диспетчера
 bot = Bot(token=TELEGRAM_TOKEN)
 dp = Dispatcher()
 
-@dp.message(Command("start"))
-async def start(message: types.Message):
+# ---------- Хэндлеры ----------
+@dp.message(Command('start'))
+async def cmd_start(message: Message):
+    """Ответ на команду /start"""
+    user_name = message.from_user.first_name
     await message.answer(
-        "👋 Здравствуйте! Я – консультант стоматологии «Улыбка+». "
-        "Задайте любой вопрос о здоровье зубов, гигиене или лечении. "
-        "Я постараюсь дать полезную информацию, основанную на экспертизе наших врачей.\n\n"
-        "⚠️ Помните: мои ответы носят справочный характер и не заменяют очный приём."
+        f"👋 Привет, {user_name}!\n"
+        "Я бот стоматологии «Улыбка+» (г. Острогожск).\n"
+        "Доступные команды: /help"
+    )
+
+@dp.message(Command('help'))
+async def cmd_help(message: Message):
+    """Справка по командам"""
+    await message.answer(
+        "📋 Список команд:\n"
+        "/start - Начало работы\n"
+        "/help - Эта справка\n"
+        "/info - Контактная информация и адрес"
+    )
+
+@dp.message(Command('info'))
+async def cmd_info(message: Message):
+    """Информация о клинике"""
+    await message.answer(
+        "🦷 Стоматология «Улыбка+»\n"
+        "📍 Адрес: г. Острогожск, ул. Ленина, 41\n"
+        "📞 Телефон для справок и записи: +7 (47375) 4-64-61\n"
+        "🕒 Часы работы: уточняйте по телефону"
     )
 
 @dp.message()
-async def handle_message(message: types.Message):
-    await bot.send_chat_action(message.chat.id, "typing")
-    answer = await ask_cloud_model(message.text)
-    await message.answer(answer)
+async def echo_message(message: Message):
+    """Эхо-ответ (можно заменить на свою логику)"""
+    await message.answer(f"Вы написали: {message.text}")
 
+# ---------- Запуск ----------
 async def main():
+    """Точка входа"""
+    logging.info("🚀 Бот для стоматологии «Улыбка+» запущен...")
     await dp.start_polling(bot)
 
-if __name__ == "__main__":
-    asyncio.run(main())
+if __name__ == '__main__':
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logging.info("⏹ Бот остановлен")
