@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import asyncio
@@ -27,7 +27,6 @@ dp = Dispatcher()
 # ---------- Хэндлеры ----------
 @dp.message(Command('start'))
 async def cmd_start(message: Message):
-    """Ответ на команду /start"""
     user_name = message.from_user.first_name
     await message.answer(
         f"👋 Привет, {user_name}!\n"
@@ -38,7 +37,6 @@ async def cmd_start(message: Message):
 
 @dp.message(Command('help'))
 async def cmd_help(message: Message):
-    """Справка по командам"""
     await message.answer(
         "📋 Список команд:\n"
         "/start - Начало работы\n"
@@ -48,7 +46,6 @@ async def cmd_help(message: Message):
 
 @dp.message(Command('info'))
 async def cmd_info(message: Message):
-    """Информация о клинике"""
     await message.answer(
         "🦷 Стоматология «Улыбка+»\n"
         "📍 Адрес: г. Острогожск, ул. Ленина, 41\n"
@@ -59,12 +56,10 @@ async def cmd_info(message: Message):
 
 @dp.message()
 async def echo_message(message: Message):
-    """Эхо-ответ (можно заменить на свою логику)"""
     await message.answer(f"Вы написали: {message.text}")
 
 # ---------- Запуск ----------
 async def main():
-    """Точка входа"""
     logging.info("🚀 Бот для стоматологии «Улыбка+» запущен...")
     await dp.start_polling(bot)
 
