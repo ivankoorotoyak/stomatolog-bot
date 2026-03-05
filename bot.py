@@ -59,10 +59,11 @@ async def echo_message(message: Message):
     await message.answer(f"Вы написали: {message.text}")
 
 # ---------- Запуск ----------
+
 async def main():
     logging.info("🚀 Бот для стоматологии «Улыбка+» запущен...")
+    await bot.delete_webhook()  # удаляем вебхук, если он был установлен
     await dp.start_polling(bot)
-
 if __name__ == '__main__':
     try:
         asyncio.run(main())
