@@ -9,7 +9,9 @@ from sentence_transformers import SentenceTransformer
 import requests
 from dotenv import load_dotenv
 
-load_dotenv()
+# Явно указываем путь к .env
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(dotenv_path)
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 FOLDER_ID = os.getenv("FOLDER_ID")
