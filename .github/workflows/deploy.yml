@@ -2,7 +2,7 @@ name: Deploy to Server
 
 on:
   push:
-    branches: [ master ]  # или main, если у вас основная ветка main
+    branches: [ master ]
 
 jobs:
   deploy:
@@ -25,6 +25,5 @@ jobs:
             git pull origin master
             source venv/bin/activate
             pip install -r requirements.txt
-            pm2 restart stomatolog-scheduler
-            pm2 restart process_incoming.py
+            pm2 restart stomatolog-bot
           EOF
