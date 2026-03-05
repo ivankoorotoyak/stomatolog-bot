@@ -14,6 +14,7 @@ dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+FOLDER_ID = os.getenv("FOLDER_ID")
 API_KEY = os.getenv("API_KEY")
 YANDEX_GPT_URL = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
 CHROMA_DIR = "/root/projects/stomatolog/chroma_db"
