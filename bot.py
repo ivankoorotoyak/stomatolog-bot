@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO)
 load_dotenv()
 
 # Получаем токен
-TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 if not TELEGRAM_TOKEN:
     raise ValueError("❌ TELEGRAM_TOKEN не найден! Проверьте файл .env")
 
