@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+"""
+Бот-гигиенист с модулем гигиены полости рта
+Не является медицинской консультацией
+"""
+import logging
+import os
+import sys
+sys.path.append('/root/ulibka_eco')
+from modules.hygiene import get_hygiene_advice
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger('clean_bot')
+
+def start(update: Update, context: CallbackContext):
+    user = update.effective_user
+    keyboard = [[InlineKeyboardButton("🦷 Гигиена", callback_data="hygiene_menu")]]
+    update.message.reply_text(
+        f"🪥 Привет, {user.first_name}! Я бот-гигиенист.\n\n"
+        "Я помогу с выбором средств гигиены: пасты, щётки, ирригаторы, ополаскиватели.\n\n"
+        "⚠️ *Важно*: Я не врач, не ставлю диагнозы. Это общие рекомендации.",
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+def button_handler(update: Update, context: CallbackContext):
+    query = update.callback_query
+    query.answer()
+    
+    if query.data == "hygiene_menu":
+        query.edit_message_text(
+            "🦷 *Режим гигиены*\n\n"
+            "Опишите проблему:\n"
+            "• чувствительность\n"
+            "• кровоточивость\n"
+            "• налёт\n"
+            "• запах\n\n"
+            "Или спросите про:\n"
+            "• паста\n"
+            "• щётка\n"
+            "• ирригатор\n"
+            "• ополаскиватель",
+            parse_mode='Markdown'
+        )
+        context.user_data['hygiene_mode'] = True
+
+def hygiene_message(update: Update, context: CallbackContext):
+    if context.user_data.get('hygiene_mode'):
+        text = update.message.text
+        advice = get_hygiene_advice(text)
+        if advice:
+            update.message.reply_text(advice, parse_mode='Markdown')
+        else:
+            update.message.reply_text(
+                "🤔 Я не совсем понял. Попробуйте описать проблему или спросить про средства гигиены.\n\n"
+                "Или нажмите /start для выхода"
+            )
+        return True
+    return False
+
+def main():
+    token = os.environ.get('CLEAN_BOT_TOKEN')
+    if not token:
+        logger.error("CLEAN_BOT_TOKEN не задан")
+        print("❌ Ошибка: токен не найден")
+        return
+    
+    updater = Updater(token, use_context=True)
+    dp = updater.dispatcher
+    
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CallbackQueryHandler(button_handler))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, hygiene_message), group=1)
+    
+    logger.info("✅ Бот-гигиенист запущен")
+    print("✅ Бот успешно запущен!")
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == "__main__":
+    main()

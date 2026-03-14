@@ -1,0 +1,11 @@
+[0;1;32m●[0m clean-bot.service - Clean Bot - Telegram bot for hygiene advice
+     Loaded: loaded (]8;;file://msk-1-vm-0es3/etc/systemd/system/clean-bot.service/etc/systemd/system/clean-bot.service]8;;; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;32mactive (running)[0m since Fri 2026-03-13 23:45:53 UTC; 9s ago
+   Main PID: 10978 (python)
+      Tasks: 2 (limit: 19144)
+     Memory: 31.7M (peak: 32.3M)
+        CPU: 337ms
+     CGroup: /system.slice/clean-bot.service
+             └─[0;38;5;245m10978 /root/ulibka_eco/venv/bin/python /root/ulibka_eco/bots/clean_bot/clean_bot.py[0m
+
+Mar 13 23:45:53 msk-1-vm-0es3 systemd[1]: Started clean-bot.service - Clean Bot - Telegram bot for hygiene advice.
